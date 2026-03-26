@@ -1,0 +1,434 @@
+﻿/* ===============================
+   Global
+================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: url("/images/login-bg.jpg") no-repeat center center / cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+    /* Overlay */
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+}
+
+/* ===============================
+   Wrapper
+================================ */
+.login-wrapper {
+    position: relative;
+    z-index: 2;
+}
+
+/* ===============================
+   Card
+================================ */
+.login-card {
+    width: 380px;
+    padding: 35px;
+    background: rgba(20, 20, 20, 0.85);
+    border-radius: 15px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+    animation: popIn 0.9s ease forwards;
+}
+
+/* ===============================
+   Titles
+================================ */
+.title {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #bbb;
+    margin-bottom: 25px;
+}
+
+/* ===============================
+   Inputs
+================================ */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background: #1f1f1f;
+    color: #fff;
+}
+
+.input-group input::placeholder {
+    color: #aaa;
+}
+
+.login-card input:focus {
+    border: 1px solid #ff2c2c;
+    box-shadow: 0 0 5px rgba(255, 44, 44, 0.5), 0 0 10px rgba(255, 44, 44, 0.4), 0 0 20px rgba(255, 44, 44, 0.3);
+    transform: scale(1.02);
+    transition: all 0.25s ease;
+}
+.input-group input {
+    transition: all 0.25s ease;
+}
+
+/* ===============================
+   Login Button (Primary)
+================================ */
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #e50914;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.login-btn:hover {
+    background: #ff1e1e;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+    transform: translateY(-2px);
+}
+
+.login-btn:active span {
+    opacity: 0.6;
+}
+
+.login-card input:hover {
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* ===============================
+   Register / Login Text
+================================ */
+.register-text {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.register-text a {
+    color: #e50914;
+    text-decoration: none;
+}
+
+/* ===============================
+   Divider
+================================ */
+.divider {
+    margin: 20px 0;
+    position: relative;
+    text-align: center;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: #444;
+}
+
+.divider::before {
+    left: 0;
+}
+
+.divider::after {
+    right: 0;
+}
+
+/* ===============================
+   Social Login Buttons
+================================ */
+.social-login {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.social-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #fff;
+    font-weight: 500;
+    transition: 0.3s ease;
+}
+
+.social-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* Platforms */
+.facebook {
+    background: #1877f2;
+}
+
+.google {
+    background: #db4437;
+}
+
+.twitter {
+    background: #1da1f2;
+}
+
+.github {
+    background: #333;
+}
+/* رسائل الخطأ */
+.text-danger {
+    color: #ff4d4d !important;
+    font-size: 13px;
+    margin-top: 5px;
+    display: block;
+}
+
+/* لما يحصل خطأ في input */
+.input-validation-error {
+    border: 1px solid #ff3b3b !important;
+    background: rgba(255, 0, 0, 0.08);
+    animation: shake 0.25s;
+}
+.field-validation-error {
+    color: #ff3b3b;
+    font-size: 12px;
+    margin-top: 6px;
+    text-align: left;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.validation-summary-errors {
+    color: #ff3b3b;
+    margin-bottom: 15px;
+    text-align: left;
+}
+.validation-summary {
+    background: rgba(255, 0, 0, 0.1);
+    border: 1px solid #ff3b3b;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    text-align: left;
+    font-size: 13px;
+}
+/*تعديلات الباسورد*/
+.password-group {
+    position: relative;
+}
+
+.forgot-password {
+    text-align: right;
+    margin-top: 5px;
+}
+
+.forgot-password a {
+    font-size: 13px;
+    color: #a970ff;
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    margin-bottom: 15px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.forgot-password {
+    font-size: 13px;
+    color: #a970ff;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #aaa;
+    user-select: none;
+}
+
+.toggle-password:hover {
+    color: #fff;
+
+}
+.strength-meter {
+    width: 100%;
+    height: 6px;
+    background: #333;
+    border-radius: 5px;
+    margin-top: 8px;
+    opacity: 0;
+    transform: scaleX(0.9);
+    transform-origin: left;
+    transition: all 0.3s ease;
+}
+.strength-meter.show {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 5px;
+    transition: all  0.3s ease;
+}
+
+.strength-text {
+    font-size: 11px;
+    display: block;
+    text-align: left;
+    margin-top: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.strength-text.show {
+    opacity: 1;
+}
+.strength-bar.strong-glow {
+    box-shadow: 0 0 10px limegreen;
+}
+
+/* Confirm Match */
+.confirm-text {
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.confirm-text.show {
+     opacity: 1;
+}
+
+.match-success {
+    color: limegreen;
+}
+
+.match-error {
+    color: #ff4d4d;
+}
+
+.input-error {
+    border: 1px solid #ff3b3b !important;
+    animation: shake 0.25s;
+}
+
+.input-success {
+    border: 1px solid limegreen !important;
+}
+
+
+
+/* ===============================
+   Animations
+================================ */
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-3px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    50% {
+        transform: translateX(4px);
+    }
+
+    75% {
+        transform: translateX(-4px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+/* Fix Chrome Autofill background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #1f1f1f inset !important;
+    box-shadow: 0 0 0 1000px #1f1f1f inset !important;
+    -webkit-text-fill-color: #fff !important;
+    caret-color: #fff;
+    transition: background-color 9999s ease-in-out 0s;
+}

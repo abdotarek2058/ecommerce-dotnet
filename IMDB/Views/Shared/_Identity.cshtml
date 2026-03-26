@@ -1,0 +1,74 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <a class="btn btn-outline-success my-2 my-sm-0" asp-controller="Account" asp-action="Login">
+        <i class="bi bi-box-arrow-in-right"></i>Log in
+    </a>
+    <span style="padding: 5px;"></span>
+
+    <a class="btn btn-outline-primary my-2 my-sm-0" asp-controller="Account" asp-action="Register">
+        <i class="bi bi-person-plus"></i>Register
+    </a>
+}
+else
+{
+
+    var user = await UserManager.GetUserAsync(User);
+    var picture = user.ProfilePicture ?? User.FindFirst("picture")?.Value;
+
+
+    @*User profile section*@
+
+    <div class="dropdown">
+        <button class="btn btn-outline-success dropdown-toggle d-flex align-items-center" type="button" id="profile-btn" data-bs-toggle="dropdown" aria-expanded="false">
+
+            @if (!string.IsNullOrEmpty(picture))
+            {
+                <img src="@picture" class="user-avatar" referrerpolicy="no-referrer" />
+            }
+            else
+            {
+
+               <span class="user-avatar-letter">
+                    @user.FullName.Substring(0, 1).ToUpper()
+              </span>
+            }
+            Hello @System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(user.FullName)
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profile-btn">
+            <li>
+                <a class="dropdown-item" asp-controller="Account" asp-action="Profile">
+                    <i class="bi bi-person"></i> Profile
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" asp-controller="Orders" asp-action="Index">
+                    <i class="bi bi-list"></i> Orders
+                </a>
+            </li>
+
+            @if(User.IsInRole("Admin"))
+            {
+                <li>
+                    <a class="dropdown-item" asp-controller="Account" asp-action="Users">
+                        <i class="bi bi-people"></i> Users
+                    </a>
+                </li>
+            }
+            <li>
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="dropdown-item text-danger">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+   
+
+
+}

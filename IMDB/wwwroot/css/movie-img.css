@@ -1,0 +1,124 @@
+﻿.movie-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
+
+.movie-card {
+    transition: all 0.3s ease;
+}
+
+.movie-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 35px rgba(0,0,0,0.35);
+    background: transparent !important;
+}
+
+.movie-poster {
+    overflow: hidden;
+    background: black;
+}
+
+.movie-poster img {
+    width: 100%;
+    transition: transform 0.4s ease;
+}
+
+.movie-poster:hover img {
+    transform: scale(1.08);
+}
+.card {
+    border: none;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    overflow: hidden;
+    background-color: transparent;
+}
+.card-header {
+    border-bottom: none;
+}
+.card-body {
+    background: transparent;
+}
+
+.card-footer {
+    border-top: none;
+}
+.movie-rating {
+    margin-top: 30px;
+}
+.movie-rating i {
+    color: inherit;
+    opacity: 0.9;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+.rating-number {
+    font-weight: bold;
+    font-size: 16px;
+}
+.dark-mode .rating-number {
+    color: #ffc107;
+}
+.movie-rating i:hover {
+    transform: scale(1.3);
+    
+}
+.movie-card:hover .movie-rating i {
+    transform: scale(1.15);
+    
+}
+
+/* ===============================
+   Rating Colors
+================================ */
+
+.rating-8 i,
+.rating-9 i,
+.rating-10 i {
+    color: #f5c518; /* ذهبي */
+}
+
+.rating-6 i,
+.rating-7 i {
+    color: #ff9f1c; /* برتقالي */
+}
+
+.rating-4 i,
+.rating-5 i {
+    color: #ffd60a; /* أصفر */
+}
+
+.rating-0 i,
+.rating-1 i,
+.rating-2 i,
+.rating-3 i {
+    color: #adb5bd; /* رمادي */
+}
+
+.card:focus,
+.card:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.card a:focus,
+.card button:focus {
+    box-shadow: none !important;
+}
+
+/* Remove white background behind cards */
+
+.row > div {
+    background: transparent !important;
+}
+
+.card {
+    background: transparent !important;
+}
+
+.movie-card {
+    background: transparent !important;
+}
+.col-md-4 {
+    background: transparent !important;
+}

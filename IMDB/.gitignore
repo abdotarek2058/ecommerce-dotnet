@@ -1,0 +1,6 @@
+﻿appsettings.Development.json
+*.user
+*.suo
+bin/
+obj/
+ 

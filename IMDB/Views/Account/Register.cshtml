@@ -1,0 +1,73 @@
+﻿@model Register
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>IMDB Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/auth.css" />
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <div class="login-card">
+            <h2 class="title">🎬 IMDB Register</h2>
+            <p class="subtitle">Create an account to continue</p>
+
+            
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+            <form asp-action="Register"  method="post">
+                @Html.AntiForgeryToken()
+                <div class="input-group">
+                    <input asp-for="FullName" placeholder="Full Name"  />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+
+                <div class="input-group">
+                    <input asp-for="Email" placeholder="Email Address" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="input-group password-group">
+                    <input asp-for="Password" type="password" placeholder="Password" />
+                    <span class="toggle-password">👁</span>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <div class="strength-meter">
+                        <div class="strength-bar"></div>
+                    </div>
+                    <small class="strength-text"></small>
+                </div>
+              
+
+                <div class="input-group password-group" >
+                    <input asp-for="ConfirmPassword" type="password" placeholder="Confirm Password" />
+                    <span class="toggle-password">👁</span>
+                    <small class="confirm-text"></small>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    <span>Register</span>
+                </button>
+
+                <p class="register-text">
+                    Already have an account?
+                    <a href="/Account/Login">Login</a>
+                </p>
+            </form>
+        </div>
+    </div>
+    
+    
+    <script src="~/js/auth.js" asp-append-version="true"></script>
+    <!-- 🔥 مهم جدًا لتشغيل Client Validation -->
+    <partial name="_ValidationScriptsPartial" />
+</body>
+</html>
+
