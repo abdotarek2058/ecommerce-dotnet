@@ -1,4 +1,4 @@
-﻿using IMDB.Models;
+﻿using IMDB.Data.Models;
 using System.Linq.Expressions;
 
 namespace IMDB.Data.Base

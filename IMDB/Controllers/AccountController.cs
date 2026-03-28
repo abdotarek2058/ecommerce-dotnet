@@ -1,8 +1,8 @@
-﻿using IMDB.Data;
-using IMDB.Data.Services;
-using IMDB.Data.Static;
-using IMDB.Data.ViewModel;
-using IMDB.Models;
+﻿using IMDB.Core.Interfaces;
+using IMDB.Core.Static;
+using IMDB.Core.ViewModel;
+using IMDB.Data;
+using IMDB.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

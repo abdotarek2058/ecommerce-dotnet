@@ -48,9 +48,9 @@
                         
                     </ul>
 
-                    <form class="d-flex my-2 my-lg-0" asp-controller ="Movies" asp-action="Filter" style="padding-right:25px;">
-                        <input name="searchString" type="text" class="form-control" placeholder="Search for a movie..." />
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="bi bi-search"></i></button>
+                    <form class="d-flex my-2 my-lg-0" asp-controller ="Movies" asp-action="Index" method="get" style="padding-right:25px;">
+                        <input id="searchInput" name="search" type="text" class="form-control" value="@ViewBag.Search" placeholder="Search for a movie..." />
+                        
                     </form>
                     <ul class="navbar-nav align-items-center">
                         @await Component.InvokeAsync("ShoppingCartSummary")

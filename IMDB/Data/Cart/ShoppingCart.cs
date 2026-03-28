@@ -1,4 +1,4 @@
-﻿using IMDB.Models;
+﻿using IMDB.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace IMDB.Data.Cart

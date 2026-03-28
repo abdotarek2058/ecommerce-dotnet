@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Movie>
+﻿@model PaginatedResult<Movie>
 <link rel="stylesheet" href="~/css/movie-img.css">
 @{
     ViewData["Title"] = "Movies List";
@@ -21,7 +21,7 @@
         }
     </div>
     <div id="movies-container" class="row" style="display:none;">
-            @foreach (var item in Model)
+            @foreach (var item in Model.Data)
             {
                 <div class="col-md-4 col-xs-6 movie-card">
                     <div class="card h-100">
@@ -132,3 +132,30 @@
 
 </div>
 @await Html.PartialAsync("_CreateItem", "Movies")
+    <div class="d-flex justify-content-center mt-4">
+
+        @if (Model.PageNumber > 1)
+        {
+            <a class="btn btn-outline-primary me-2"
+                   asp-action="Index"
+                   asp-route-page="@(Model.PageNumber - 1)"
+                   asp-route-search="@ViewBag.Search">
+                Prev
+            </a>
+        }
+
+        <span class="align-self-center">
+            Page @Model.PageNumber of @Model.TotalPages
+        </span>
+
+        @if (Model.PageNumber < Model.TotalPages)
+        {
+            <a class="btn btn-outline-primary ms-2"
+                   asp-action="Index"
+                   asp-route-page="@(Model.PageNumber + 1)"
+                   asp-route-search="@ViewBag.Search">
+                Next
+            </a>
+        }
+
+    </div>

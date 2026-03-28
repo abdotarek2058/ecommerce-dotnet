@@ -1,7 +1,7 @@
-﻿using IMDB.Data;
-using IMDB.Data.Services;
-using IMDB.Data.Static;
-using IMDB.Data.ViewModel;
+﻿using IMDB.Core.Interfaces;
+using IMDB.Core.Static;
+using IMDB.Core.ViewModel;
+using IMDB.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,21 +12,31 @@ namespace IMDB.Controllers
     [Authorize(Roles = UserRoles.Admin)]
     public class MoviesController : Controller
     {
+        private async Task PopulateDropdowns()
+        {
+                var movieDropdownsData = await _service.GetNewMovieDropdownsValues();
+                ViewBag.Actors = new SelectList(movieDropdownsData.Actors, "Id", "FullName");
+                ViewBag.Cinemas = new SelectList(movieDropdownsData.Cinemas, "Id", "Name");
+                ViewBag.Producers = new SelectList(movieDropdownsData.Producers, "Id", "FullName");
+        }
         private readonly IMoviesService _service;
         public MoviesController(IMoviesService service)
         {
             _service = service;
         }
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, string search = "")
         {
-            var allMovies = await _service.GetAllAsync(m => m.Cinema);
-            return View(allMovies);
+            int pageSize = 6;
+            var result = await _service.GetAllPagedAsync(page, pageSize, search);
+            ViewBag.Search = search;
+
+            return View(result);
         }
         [AllowAnonymous]
         public async Task<IActionResult> Filter(string searchString)
         {
-            var allMovies = await _service.GetAllAsync(m => m.Cinema);
+            var allMovies = await _service.FilterAsync(searchString);
             if (!string.IsNullOrEmpty(searchString))
             {
                 var filteredResult = allMovies.Where(n => n.Name.ToLower().Contains(searchString.ToLower()) || n.Description.ToLower().Contains(searchString.ToLower()) || n.MovieCategory.ToString().ToLower().Contains(searchString.ToLower())).ToList();
@@ -47,10 +57,7 @@ namespace IMDB.Controllers
         //Get: Movies/Create
         public async Task<IActionResult> Create()
         {
-            var movieDropdownsData = await _service.GetNewMovieDropdownsValues();
-            ViewBag.Actors = new SelectList(movieDropdownsData.Actors, "Id", "FullName");
-            ViewBag.Cinemas = new SelectList(movieDropdownsData.Cinemas, "Id", "Name");
-            ViewBag.Producers = new SelectList(movieDropdownsData.Producers, "Id", "FullName");
+            await PopulateDropdowns();
             return View();
         }
         [HttpPost]
@@ -59,10 +66,7 @@ namespace IMDB.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var movieDropdownsData = await _service.GetNewMovieDropdownsValues();
-                ViewBag.Actors = new SelectList(movieDropdownsData.Actors, "Id", "FullName");
-                ViewBag.Cinemas = new SelectList(movieDropdownsData.Cinemas, "Id", "Name");
-                ViewBag.Producers = new SelectList(movieDropdownsData.Producers, "Id", "FullName");
+                await PopulateDropdowns();
                 return View(movie);
             }
             await _service.AddNewMovieAsync(movie);
@@ -88,10 +92,7 @@ namespace IMDB.Controllers
                 ProducerId = movieDetails.ProducerId,
                 ActorIds = movieDetails.Actors_Movies!.Select(n => n.ActorId).ToList()
             };
-            var movieDropdownsData = await _service.GetNewMovieDropdownsValues();
-            ViewBag.Actors = new SelectList(movieDropdownsData.Actors, "Id", "FullName");
-            ViewBag.Cinemas = new SelectList(movieDropdownsData.Cinemas, "Id", "Name");
-            ViewBag.Producers = new SelectList(movieDropdownsData.Producers, "Id", "FullName");
+            await PopulateDropdowns();
             return View(updatemovie);
         }
         [HttpPost]
@@ -101,10 +102,7 @@ namespace IMDB.Controllers
             if (id != movie.Id) return  BadRequest(); ;
             if (!ModelState.IsValid)
             {
-                var movieDropdownsData = await _service.GetNewMovieDropdownsValues();
-                ViewBag.Actors = new SelectList(movieDropdownsData.Actors, "Id", "FullName");
-                ViewBag.Cinemas = new SelectList(movieDropdownsData.Cinemas, "Id", "Name");
-                ViewBag.Producers = new SelectList(movieDropdownsData.Producers, "Id", "FullName");
+                await PopulateDropdowns();
                 return View(movie);
             }
             await _service.UpdateMovieAsync(movie);

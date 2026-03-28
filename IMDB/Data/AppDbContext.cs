@@ -1,4 +1,4 @@
-﻿using IMDB.Models;
+﻿using IMDB.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using IMDB.Models;
+using IMDB.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IMDB.Controllers

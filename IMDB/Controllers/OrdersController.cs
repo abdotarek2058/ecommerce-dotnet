@@ -1,8 +1,9 @@
-﻿using IMDB.Data;
+﻿using IMDB.Core.Interfaces;
+using IMDB.Core.ViewModel;
+using IMDB.Data;
 using IMDB.Data.Cart;
 using IMDB.Data.Enums;
-using IMDB.Data.Services;
-using IMDB.Data.ViewModel;
+using IMDB.Core.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

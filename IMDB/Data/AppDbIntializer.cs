@@ -1,6 +1,6 @@
-﻿using IMDB.Data.Enums;
-using IMDB.Data.Static;
-using IMDB.Models;
+﻿using IMDB.Core.Static;
+using IMDB.Data.Enums;
+using IMDB.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
