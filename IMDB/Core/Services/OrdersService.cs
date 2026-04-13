@@ -1,9 +1,9 @@
-﻿using IMDB.Core.Interfaces;
+﻿using Hangfire;
+using IMDB.Core.Interfaces;
 using IMDB.Data;
 using IMDB.Data.Enums;
 using IMDB.Data.Models;
 using Microsoft.EntityFrameworkCore;
-
 namespace IMDB.Core.Services
 {
     public class OrdersService : IOrdersService
@@ -79,11 +79,11 @@ namespace IMDB.Core.Services
                     template = template.Replace("{{LINK}}", "https://localhost:7273/Orders");
 
 
-                    await _emailService.SendEmailAsync(
+                    BackgroundJob.Enqueue<IEmailService> (x => x.SendEmailAsync(
                        userEmailAddress,
                        "Order Confirmation",
                        template
-                    );
+                    ));
                 }
                 catch (Exception ex)
                 {

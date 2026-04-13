@@ -1,0 +1,221 @@
+@model IMDB.Core.ViewModel.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+
+<div class="dashboard-shell">
+    <aside class="dashboard-sidebar">
+        <div class="brand-block">
+            <div class="brand-mark"><i class="bi bi-film"></i></div>
+            <div>
+                <div class="brand-name">IMDB</div>
+                <div class="brand-subtitle">Admin dashboard</div>
+            </div>
+        </div>
+
+        <nav class="dashboard-nav">
+            <a class="dashboard-nav-link active" asp-controller="Home" asp-action="Dashboard">
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </a>
+            @foreach (var link in Model.QuickLinks)
+            {
+                <a class="dashboard-nav-link" asp-controller="@link.Controller" asp-action="@link.Action">
+                    <i class="bi @link.Icon"></i>
+                    <span>@link.Title</span>
+                </a>
+            }
+        </nav>
+
+        <div class="sidebar-profile">
+            @if (!string.IsNullOrEmpty(Model.AdminPicture))
+            {
+                <img src="@Model.AdminPicture" alt="@Model.AdminName" class="sidebar-avatar" referrerpolicy="no-referrer" />
+            }
+            else
+            {
+                <div class="sidebar-avatar sidebar-avatar-fallback">@Model.AdminName[0]</div>
+            }
+            <div>
+                <div class="sidebar-role">Administrator</div>
+                <div class="sidebar-name">@Model.AdminName</div>
+            </div>
+        </div>
+    </aside>
+
+    <section class="dashboard-content">
+        <div class="dashboard-topbar">
+            <div>
+                <p class="eyebrow">Control center</p>
+                <h1>Welcome back, @Model.AdminName</h1>
+            </div>
+            <div class="topbar-actions">
+                <a class="topbar-button ghost" asp-controller="Movies" asp-action="Create">
+                    <i class="bi bi-plus-circle"></i>
+                    Add movie
+                </a>
+                <a class="topbar-button" asp-controller="Orders" asp-action="Index">
+                    <i class="bi bi-receipt-cutoff"></i>
+                    View orders
+                </a>
+            </div>
+        </div>
+
+        @if (Model.HeroMovie != null)
+        {
+            <section class="hero-panel" style="background-image: linear-gradient(90deg, rgba(11,14,28,.92) 0%, rgba(11,14,28,.55) 45%, rgba(11,14,28,.15) 100%), url('@Model.HeroMovie.ImageUrl')">
+                <div class="hero-copy">
+                    <p class="eyebrow">Top rated spotlight</p>
+                    <h2>@Model.HeroMovie.Name</h2>
+                    <div class="hero-meta">
+                        <span>@Model.HeroMovie.Category</span>
+                        <span>@Model.HeroMovie.Cinema</span>
+                        <span><i class="bi bi-star-fill"></i> @Model.HeroMovie.Rating.ToString("0.0")</span>
+                    </div>
+                    <p>@Model.HeroMovie.Description</p>
+                    <div class="hero-actions">
+                        <a class="topbar-button" asp-controller="Movies" asp-action="Details" asp-route-id="@Model.HeroMovie.Id">Details</a>
+                        <a class="topbar-button ghost" asp-controller="Movies" asp-action="Edit" asp-route-id="@Model.HeroMovie.Id">Edit movie</a>
+                    </div>
+                </div>
+            </section>
+        }
+
+        <section class="stats-grid">
+            @foreach (var stat in Model.Stats)
+            {
+                <article class="stat-card @stat.ToneClass">
+                    <div class="stat-icon"><i class="bi @stat.Icon"></i></div>
+                    <div class="stat-value">@stat.Value</div>
+                    <div class="stat-title">@stat.Title</div>
+                    <div class="stat-subtitle">@stat.Subtitle</div>
+                </article>
+            }
+        </section>
+
+        <section class="dashboard-grid">
+            <div class="panel panel-large">
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Trending now</p>
+                        <h3>Movies at a glance</h3>
+                    </div>
+                    <a asp-controller="Movies" asp-action="Index" class="panel-link">All movies</a>
+                </div>
+
+                <div class="movie-mini-grid">
+                    @foreach (var movie in Model.TrendingMovies)
+                    {
+                        <article class="mini-movie-card">
+                            <img src="@movie.ImageUrl" alt="@movie.Name" />
+                            <div class="mini-movie-overlay">
+                                <span class="mini-badge @movie.StatusClass">@movie.Status</span>
+                                <div class="mini-rating">
+                                    <i class="bi bi-star-fill"></i>
+                                    @movie.Rating.ToString("0.0")
+                                </div>
+                            </div>
+                            <div class="mini-movie-content">
+                                <h4>@movie.Name</h4>
+                                <p>@movie.Category</p>
+                                <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id">Open details</a>
+                            </div>
+                        </article>
+                    }
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Distribution</p>
+                        <h3>Categories</h3>
+                    </div>
+                </div>
+
+                <div class="category-list">
+                    @foreach (var category in Model.CategoryStats)
+                    {
+                        <div class="category-row">
+                            <div class="category-row-top">
+                                <span>@category.Category</span>
+                                <strong>@category.Count movie(s)</strong>
+                            </div>
+                            <div class="category-track">
+                                <div class="category-fill @category.GradientClass" style="width:@category.Percentage%"></div>
+                            </div>
+                            <small>@category.Percentage%</small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-grid">
+            <div class="panel panel-large">
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Monitoring</p>
+                        <h3>Recent orders</h3>
+                    </div>
+                    <a asp-controller="Orders" asp-action="Index" class="panel-link">Orders page</a>
+                </div>
+
+                <div class="orders-table-wrap">
+                    <table class="dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Customer</th>
+                                <th>Movie</th>
+                                <th>Total</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.RecentOrders)
+                            {
+                                <tr>
+                                    <td>#@order.Id</td>
+                                    <td>@order.CustomerName</td>
+                                    <td>@order.MovieName</td>
+                                    <td>@order.Total EGP</td>
+                                    <td>@order.Date</td>
+                                    <td><span class="table-status @order.StatusClass">@order.StatusText</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Shortcuts</p>
+                        <h3>Management areas</h3>
+                    </div>
+                </div>
+
+                <div class="shortcut-list">
+                    @foreach (var link in Model.QuickLinks.Take(4))
+                    {
+                        <a class="shortcut-card" asp-controller="@link.Controller" asp-action="@link.Action">
+                            <div class="shortcut-icon"><i class="bi @link.Icon"></i></div>
+                            <div>
+                                <h4>@link.Title</h4>
+                                <p>@link.Subtitle</p>
+                            </div>
+                        </a>
+                    }
+                </div>
+            </div>
+        </section>
+    </section>
+</div>

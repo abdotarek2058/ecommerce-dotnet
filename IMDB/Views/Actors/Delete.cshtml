@@ -1,54 +1,60 @@
 ﻿@model Actor
 @{
-    ViewData["Title"] = Model.FullName;
+    ViewData["Title"] = "Delete Actor";
 }
 
-<div class="row text">
-    <div class="col-md-8 offset-2">
-        <p>
-            <h1>Delete Actor</h1>
-        </p>
-        <div class="row">
-            <div class="col-md-6 offset-2">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
 
-                <div class="mb-3 text-center">
-                    <img id="ProfilePicturePreview" class="border-info rounded-circle" style="max-width:170px;" />
-                </div>
-                <div class="mb-3">
-                    <label asp-for="ProfilePictureURL" class="form-label"></label>
-                    <input asp-for="ProfilePictureURL" class="form-control" readonly />
-                    <span asp-validation-for="ProfilePictureURL" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="FullName" class="form-label"></label>
-                    <input asp-for="FullName" class="form-control" readonly />
-                    <span asp-validation-for="FullName" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Bio" class="form-label"></label>
-                    <input asp-for="Bio" class="form-control" readonly />
-                    <span asp-validation-for="Bio" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <form asp-action="Delete">
+            <div class="card shadow-lg border-0 rounded-4 p-4 text-center">
+
+                <!-- Title -->
+                <h2 class="text-danger fw-bold mb-3">
+                    ⚠️ Delete Actor
+                </h2>
+
+                <p class="text-muted mb-4">
+                    Are you sure you want to delete this actor? This action cannot be undone.
+                </p>
+
+                <!-- Image -->
+                <img src="@Model.ProfilePictureURL"
+                     class="rounded-circle mx-auto mb-3"
+                     style="width:150px; height:150px; object-fit:cover; border:4px solid #dc3545;" />
+
+                <!-- Name -->
+                <h4 class="fw-bold">@Model.FullName</h4>
+
+                <!-- Bio -->
+                <p class="text-muted px-3 mt-2" style="line-height:1.6;">
+                    @Model.Bio
+                </p>
+
+                <hr />
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-center gap-3 mt-3">
+
+                    <a class="btn btn-outline-secondary px-4"
+                           asp-action="Index">
+                        <i class="bi bi-arrow-left"></i> Cancel
+                    </a>
+
+                    <form asp-action="Delete" method="post"
+                          onsubmit="return confirm('Are you sure you want to delete this actor?');">
                         @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="Id" />
-                        <input type="submit" value="Delete" class="btn btn-danger float-end" />
-                     </form>
-                    <a class="btn btn-outline-secondary" asp-action="Index">ShowAll</a>
+
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                    </form>
+
                 </div>
 
             </div>
+
         </div>
     </div>
 </div>
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            var output = document.getElementById('ProfilePicturePreview');
-            output.src = $("#ProfilePictureURL").val();
-            output.style.width = "200px";
-            output.style.height = "170px";
-        })
-    </script>
-}

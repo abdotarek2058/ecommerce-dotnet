@@ -6,12 +6,14 @@
 
 .movie-card {
     transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
 }
 
 .movie-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 14px 35px rgba(0,0,0,0.35);
-    background: transparent !important;
+    transform: scale(1.03);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+    z-index: 10;
 }
 
 .movie-poster {
@@ -29,9 +31,10 @@
 }
 .card {
     border: none;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     overflow: hidden;
-    background-color: transparent;
+    background: #ffffff; /* أو #f8f9fa لو عايز soft */
 }
 .card-header {
     border-bottom: none;
@@ -106,19 +109,162 @@
     box-shadow: none !important;
 }
 
-/* Remove white background behind cards */
-
-.row > div {
-    background: transparent !important;
+.add-btn-floating {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 9999;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    transition: all 0.3s ease;
 }
 
-.card {
-    background: transparent !important;
+.add-btn-floating:hover {
+    transform: scale(1.1);
 }
 
-.movie-card {
-    background: transparent !important;
+
+
+.create-card {
+    max-width: 900px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
-.col-md-4 {
-    background: transparent !important;
+
+.create-card label {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.create-card .form-control,
+.create-card .form-select {
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.create-card .form-control:focus,
+.create-card .form-select:focus {
+    border-color: #0dcaf0;
+    box-shadow: 0 0 0 0.15rem rgba(13,202,240,0.25);
+}
+
+.create-btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.img-preview {
+    max-height: 250px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+.star-rating i {
+    font-size: 28px;
+    color: #ccc;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.star-rating i.active {
+    color: #ffc107;
+}
+
+.star-rating i:hover {
+    transform: scale(1.2);
+}
+
+.drop-zone {
+    border: 2px dashed #0dcaf0;
+    padding: 10px;
+    text-align: center;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+
+.drop-zone:hover {
+    background: #f1f9ff;
+}
+
+.drop-zone.dragover {
+    background: #e0f7ff;
+}
+
+.text-danger {
+    font-size: 13px;
+    color: #dc3545;
+}
+
+input:invalid {
+    border-color: #dc3545;
+}
+
+input:valid {
+    border-color: #198754;
+}
+.img-preview {
+    width: 150px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    display: block;
+    margin: 0 auto; /* 👈 يخليها في النص */
+    margin-top: 80px;
+}
+.img-preview.show {
+    opacity: 1;
+}
+
+/* Keep posters stretched to the full content height in movie cards */
+.movie-card .card > .row.g-0 {
+    height: 100%;
+}
+
+.movie-card .movie-poster {
+    display: flex;
+}
+
+.movie-card .movie-poster .movie-img,
+.movie-card .movie-poster img {
+    height: 100%;
+    min-height: 100%;
+}
+
+.movie-card .col-md-6.p-0:last-of-type {
+    display: flex;
+}
+
+.movie-card .col-md-6.p-0:last-of-type .card-body {
+    width: 100%;
+}
+
+.movie-details-poster {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    background: #000;
+}
+
+.movie-details-img {
+    height: 900px;
+    width: 100%;
+    object-fit: fill;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .movie-details-img {
+        height: 680px;
+    }
 }

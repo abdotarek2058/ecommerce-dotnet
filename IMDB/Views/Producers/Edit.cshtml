@@ -2,70 +2,132 @@
 @{
     ViewData["Title"] = Model.FullName;
 }
-<div class="row text">
-    <div class="col-md-8 offset-2">
-        <p>
-            <h1>Update for @Model.FullName </h1>
-        </p>
-        <div class="row">
-            <div class="col-md-6 offset-2">
+
+<link rel="stylesheet" href="~/css/actor-img.css" />
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-lg border-0 rounded-4 p-4">
+
+                <!-- Title -->
+                <h2 id="ProducerTitle" class="text-center fw-bold mb-4">
+                    @Model.FullName
+                </h2>
+
                 <form asp-action="Edit">
                     @Html.AntiForgeryToken()
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="mb-3 text-center">
-                        <img id="ProfilePicturePreview" class="border-info rounded-circle" style="display:none; border:1px solid #ccc;  margin: 0 auto;" />
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <!-- Image Preview -->
+                    <div class="text-center mb-4">
+                        <img id="ProfilePicturePreview"
+                             src="@Model.ProfilePictureURL"
+                             class="rounded-circle"
+                             style="width:180px; height:180px; object-fit:cover; border:4px solid #0dcaf0;" />
                     </div>
+
+                    <!-- Profile URL -->
                     <div class="mb-3">
-                        <label asp-for="ProfilePictureURL" class="form-label"></label>
-                        <input asp-for="ProfilePictureURL" class="form-control" />
+                        <label asp-for="ProfilePictureURL" class="form-label fw-semibold"></label>
+                        <input asp-for="ProfilePictureURL"
+                               id="ProfilePictureURL"
+                               class="form-control form-control-lg"
+                               placeholder="Paste image URL" />
                         <span asp-validation-for="ProfilePictureURL" class="text-danger"></span>
                     </div>
+
+                    <!-- Name -->
                     <div class="mb-3">
-                        <label asp-for="FullName" class="form-label"></label>
-                        <input asp-for="FullName" class="form-control" />
+                        <label asp-for="FullName" class="form-label fw-semibold"></label>
+                        <input asp-for="FullName"
+                               id="FullNameInput"
+                               class="form-control form-control-lg"
+                               placeholder="Producer name" />
                         <span asp-validation-for="FullName" class="text-danger"></span>
                     </div>
-                    <div class="mb-3">
-                        <label asp-for="Bio" class="form-label"></label>
-                        <input asp-for="Bio" class="form-control" />
+
+                    <!-- Bio -->
+                    <div class="mb-4">
+                        <label asp-for="Bio" class="form-label fw-semibold"></label>
+
+                        <textarea asp-for="Bio"
+                                  id="BioInput"
+                                  class="form-control"
+                                  rows="4"
+                                  style="line-height:1.6;"></textarea>
+
+                        <!-- Character Counter -->
+                        <small id="bioCounter" class="text-muted"></small>
+
                         <span asp-validation-for="Bio" class="text-danger"></span>
                     </div>
-                    <div class="mb-3">
-                        <input type="submit" value="Update" class="btn btn-outline-success float-end" />
 
-                        <a class="btn btn-outline-secondary" asp-action="Index">ShowAll</a>
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <a class="btn btn-outline-secondary px-4"
+                               asp-action="Index">
+                            ← Back
+                        </a>
+
+                        <button type="submit" class="btn btn-outline-success px-4">
+                            <i class="bi bi-check-circle"></i> Update
+                        </button>
+
                     </div>
+
                 </form>
+
             </div>
+
         </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
-
-        function updateImagePreview(url) {
-            var output = document.getElementById('ProfilePicturePreview');
-
-            if (url && url.trim() !== "") {
-                output.src = url;
-                output.style.width = "200px";
-                output.style.height = "170px";
-                output.style.display = "block";
-            } else {
-                output.src = "";
-                output.style.display = "none";
-            }
-        }
-
         $(document).ready(function () {
-            updateImagePreview($("#ProfilePictureURL").val());
 
-            $("#ProfilePictureURL").on("change", function () {
+            // Image Preview
+            function updateImagePreview(url) {
+                var output = document.getElementById('ProfilePicturePreview');
+                output.src = url || "/images/default-user.png";
+            }
+
+            $("#ProfilePictureURL").on("input", function () {
                 updateImagePreview($(this).val());
             });
+
+            // Dynamic Title + Placeholder
+            function updateUI() {
+                var name = $("#FullNameInput").val().trim();
+
+                $("#ProducerTitle").text(name || "Update Producer");
+
+                if (name.length > 0) {
+                    $("#BioInput").attr(
+                        "placeholder",
+                        "Write a short biography about " + name + "..."
+                    );
+                }
+            }
+
+            $("#FullNameInput").on("input", updateUI);
+
+            // Character Counter
+            function updateCounter() {
+                var count = $("#BioInput").val().length;
+                $("#bioCounter").text(count + " characters");
+            }
+
+            $("#BioInput").on("input", updateCounter);
+
+            // Initial run
+            updateUI();
+            updateCounter();
         });
     </script>
 }
-
-

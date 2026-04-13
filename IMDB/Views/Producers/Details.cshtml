@@ -1,52 +1,60 @@
 ﻿@model Producer
 @{
-    ViewData["Title"] = @Model.FullName;
+    ViewData["Title"] = Model.FullName;
+    var returnUrl = Context.Request.Query["returnUrl"].ToString();
+    var hasReturnUrl = !string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl);
 }
-<div class="row text">
-    <div class="col-md-8 offset-2">
-        <p>
-            <h1>Details for @Model.FullName</h1>
-        </p>
-        <div class="row">
-            <div class="col-md-6 offset-2">
+<link rel="stylesheet" href="~/css/actor-img.css" />
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
 
-                <div class="mb-3 text-center">
-                    <img id="ProfilePicturePreview" class="border-info rounded-circle" style="max-width:170px;" />
-                </div>
-                <div class="mb-3">
-                    <label asp-for="ProfilePictureURL" class="form-label"></label>
-                    <input asp-for="ProfilePictureURL" class="form-control" readonly />
-                    <span asp-validation-for="ProfilePictureURL" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="FullName" class="form-label"></label>
-                    <input asp-for="FullName" class="form-control" readonly />
-                    <span asp-validation-for="FullName" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Bio" class="form-label"></label>
-                    <input asp-for="Bio" class="form-control" readonly />
-                    <span asp-validation-for="Bio" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
+            <div class="card shadow-lg border-0 rounded-4 p-4 text-center">
+
+                <!-- Image -->
+                <img src="@Model.ProfilePictureURL"
+                     class="rounded-circle mx-auto mb-3"
+                     style="width:180px; height:180px; object-fit:cover; border:4px solid #0dcaf0;" />
+
+                <!-- Name -->
+                <h2 class="fw-bold">@Model.FullName</h2>
+
+                <hr />
+
+                <!-- Bio -->
+                <p class="text-muted fs-5 px-3" style="line-height:1.8;">
+                    @Model.Bio
+                </p>
+
+                <!-- Buttons -->
+                <div class="mt-4 d-flex justify-content-center gap-3 flex-wrap">
+
+                    @if (hasReturnUrl)
+                    {
+                        <a class="btn btn-outline-secondary px-4" href="@returnUrl">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-secondary px-4" asp-action="Index">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </a>
+                    }
+
                     @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                     {
-                        <a class="btn btn-outline-success float-end" asp-action="Edit" asp-route-id="@Model.Id"><i class="bi bi-pen-fill"></i>Edit</a>
+                        <a class="btn btn-success px-4"
+                               asp-action="Edit"
+                               asp-route-id="@Model.Id">
+                            ✏ Edit
+                        </a>
                     }
-                    <a class="btn btn-outline-secondary" asp-action="Index">ShowAll</a>
+
                 </div>
 
             </div>
+
         </div>
     </div>
 </div>
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            var output = document.getElementById('ProfilePicturePreview');
-            output.src = $("#ProfilePictureURL").val();
-            output.style.width = "200px";
-            output.style.height = "170px";
-        })
-    </script>
-}

@@ -1,69 +1,155 @@
 ﻿@model Cinema
 @{
-    ViewData["Title"] = "Add a new Cinema";
+    ViewData["Title"] = "Add New Cinema";
 }
-<div class="row text">
-    <div class="col-md-8 offset-2">
-        <p>
-            <h1>Add New Cinema</h1>
-        </p>
-        <div class="row">
-            <div class="col-md-6 offset-2">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-lg border-0 rounded-4 p-4">
+
+                <!-- Title -->
+                <h2 id="CinemaTitle" class="text-center fw-bold mb-4">
+                    Add New Cinema
+                </h2>
+
                 <form asp-action="Create">
                     @Html.AntiForgeryToken()
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="mb-3 text-center">
-                        <img id="CinemaLogoPreview" class="border-info rounded-circle" style="display:none; border:1px solid #ccc;  margin: 0 auto;" />
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <!-- 🖼️ Image Preview -->
+                    <div class="text-center mb-4">
+                        <img id="CinemaLogoPreview"
+                             class="border-info rounded-circle"
+                             style="display:none; border:2px solid #0dcaf0; margin:0 auto;" />
                     </div>
+
+                    <!-- Logo -->
                     <div class="mb-3">
-                        <label asp-for="Logo" class="form-label"></label>
-                        <input asp-for="Logo" class="form-control" />
+                        <label asp-for="Logo" class="form-label fw-semibold"></label>
+                        <input asp-for="Logo" id="Logo" class="form-control form-control-lg"
+                               placeholder="Paste image URL (e.g. /images/cinemas/cinema-1.jpg)" />
                         <span asp-validation-for="Logo" class="text-danger"></span>
                     </div>
+
+                    <!-- Name -->
                     <div class="mb-3">
-                        <label asp-for="Name" class="form-label"></label>
-                        <input asp-for="Name" class="form-control" />
+                        <label asp-for="Name" class="form-label fw-semibold"></label>
+                        <input asp-for="Name" id="Name"
+                               class="form-control form-control-lg"
+                               placeholder="Enter cinema name..." />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-                    <div class="mb-3">
-                        <label asp-for="Description" class="form-label"></label>
-                        <input asp-for="Description" class="form-control" />
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
-                    <div class="mb-3">
-                        <input type="submit" value="Create" class="btn btn-outline-success float-end" />
 
-                        <a class="btn btn-outline-secondary" asp-action="Index">ShowAll</a>
+                    <!-- Description -->
+                    <div class="mb-4">
+                        <label asp-for="Description" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Description"
+                                  id="Description"
+                                  class="form-control"
+                                  rows="4"
+                                  maxlength="200"
+                                  placeholder="Write a short description..."></textarea>
+
+                        <span asp-validation-for="Description" class="text-danger"></span>
+
+                        <!-- Counter -->
+                        <small id="descCounter" class="text-muted">0 characters</small>
                     </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between">
+
+                        <a class="btn btn-outline-secondary px-4" asp-action="Index">
+                            ← Show All
+                        </a>
+
+                        <button type="submit" class="btn btn-success px-4">
+                            <i class="bi bi-plus-circle"></i> Create
+                        </button>
+
+                    </div>
+
                 </form>
+
             </div>
+
         </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
-
-        function updateImagePreview(url) {
-            var output = document.getElementById('CinemaLogoPreview');
-
-            if (url && url.trim() !== "") {
-                output.src = url;
-                output.style.width = "200px";
-                output.style.height = "170px";
-                output.style.display = "block";
-            } else {
-                output.src = "";
-                output.style.display = "none";
-            }
-        }
-
         $(document).ready(function () {
+
+            // 🖼️ Image Preview
+            function updateImagePreview(url) {
+                var output = document.getElementById('CinemaLogoPreview');
+
+                if (url && url.trim() !== "") {
+                    output.src = url;
+                    output.style.width = "200px";
+                    output.style.height = "170px";
+                   
+                    output.style.display = "block";
+                } else {
+                    output.src = "";
+                    output.style.display = "none";
+                }
+            }
+
             updateImagePreview($("#Logo").val());
 
-            $("#Logo").on("change", function () {
+            $("#Logo").on("input", function () {
                 updateImagePreview($(this).val());
             });
+
+            // 🔤 Dynamic Title
+            $("#Name").on("input", function () {
+                let name = $(this).val().trim();
+                $("#CinemaTitle").text(name !== "" ? name : "Add New Cinema");
+            });
+
+                    
+            $("#Name").on("input", function () {
+
+                let name = $(this).val().trim();
+
+                if (name !== "") {
+                    $("#Description").attr(
+                        "placeholder",
+                        "Write a short description about " + name + "..."
+                    );
+                } else {
+
+                    $("#Description").attr(
+                      "placeholder",
+                      "Write a short description..."
+                    );
+                }
+
+            });
+
+            // 🔢 Description Counter
+            function updateCounter() {
+                let length = $("#Description").val().length;
+                $("#descCounter").text(length + " characters");
+
+                if (length > 150) {
+                    $("#descCounter").addClass("text-danger");
+                } else {
+                    $("#descCounter").removeClass("text-danger");
+                }
+            }
+
+            updateCounter();
+
+            $("#Description").on("input", function () {
+                updateCounter();
+            });
+
         });
     </script>
 }

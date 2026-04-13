@@ -39,7 +39,8 @@ namespace IMDB.Core.Services
                 EndDate = data.EndDate,
                 MovieCategory = data.MovieCategory,
                 CinemaId = data.CinemaId,
-                ProducerId = data.ProducerId
+                ProducerId = data.ProducerId,
+                Rating = data.Rating
             };
             await _context.Movies.AddAsync(newMovie);
             
@@ -96,6 +97,7 @@ namespace IMDB.Core.Services
             dbMovie.MovieCategory = data.MovieCategory;
             dbMovie.CinemaId = data.CinemaId;
             dbMovie.ProducerId = data.ProducerId;
+            dbMovie.Rating = data.Rating;
             await _context.SaveChangesAsync();
 
 

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Hangfire;
+using Hangfire.SqlServer;
 
 
 namespace IMDB
@@ -21,6 +23,11 @@ namespace IMDB
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+
+            builder.Services.AddHangfire(config =>
+              config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+
+            builder.Services.AddHangfireServer();
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options=> {
                 options.Password.RequiredLength = 8;
@@ -94,7 +101,9 @@ namespace IMDB
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
-           
+
+            app.UseHangfireDashboard("/hangfire");
+
 
             app.MapStaticAssets();
             app.MapControllerRoute(

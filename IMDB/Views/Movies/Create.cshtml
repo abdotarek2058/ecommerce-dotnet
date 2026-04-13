@@ -2,116 +2,292 @@
 @{
     ViewData["Title"] = "Create Movie";
 }
-<div class="row">
-    <div class="col-md-8 offset-2">
-        <h4>Create a New Movie</h4>
-        <div class="row">
-            <div class="col-md-8 offset-2">
-                <form asp-action="Create">
-                    @Html.AntiForgeryToken()
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label asp-for="Name" class="form-label"></label>
-                                <input asp-for="Name" class="form-control" />
-                                <span asp-validation-for="Name" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="StartDate" class="form-label"></label>
-                                <input asp-for="StartDate" type="date" class="form-control" />
-                                <span asp-validation-for="StartDate" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="EndDate" class="form-label"></label>
-                                <input asp-for="EndDate" type="date" class="form-control" />
-                                <span asp-validation-for="EndDate" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="Price" class="form-label"></label>
-                                <input asp-for="Price" type="number" class="form-control" />
-                                <span asp-validation-for="Price" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="Rating" class="form-label"></label>
-                                <input asp-for="Rating" id="ratingInput" type="number" step="0.1" min="0" max="10" class="form-control" />
-                                <span asp-validation-for="Rating" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <div id="starsPreview" style="font-size:24px;color:gold;"></div>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="ImageURL" class="form-label"></label>
-                                <input asp-for="ImageURL" class="form-control" />
-                                <span asp-validation-for="ImageURL" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label asp-for="CinemaId" class="form-label"></label>
-                                <select asp-for="CinemaId" class="form-select" asp-items="ViewBag.Cinemas"></select>
-                                <span asp-validation-for="CinemaId" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="MovieCategory" class="form-label"></label>
-                                <select asp-for="MovieCategory" class="form-select" asp-items="Html.GetEnumSelectList<MovieCategory>()"></select>
-                                <span asp-validation-for="MovieCategory" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="ProducerId" class="form-label"></label>
-                                <select asp-for="ProducerId" class="form-select" asp-items="ViewBag.Producers"></select>
-                                <span asp-validation-for="ProducerId" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="ActorIds" class="form-label"></label>
-                                <select asp-for="ActorIds" class="form-select" asp-items="ViewBag.Actors" multiple></select>
-                                <span asp-validation-for="ActorIds" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label asp-for="Description" class="form-label"></label>
-                                <textarea asp-for="Description" class="form-control"></textarea>
-                                <span asp-validation-for="Description" class="text-danger"></span>
-                            </div>
+<link rel="stylesheet" href="/css/movie-img.css" />
+<div class="container mt-5">
+    <div class="create-card mx-auto">
+
+        <h2 class="text-center mb-4 fw-bold">
+            🎬 Create a New Movie
+        </h2>
+
+        <form asp-action="Create">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="row g-4">
+
+                <!-- LEFT -->
+                <div class="col-md-6">
+
+                    <div>
+                        <label asp-for="Name"></label>
+                        <input asp-for="Name" id="movieNameInput" class="form-control" placeholder="Movie Name" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="StartDate"></label>
+                        <input asp-for="StartDate" type="date" class="form-control" />
+                    </div>
+
+                    <div>
+                        <label asp-for="EndDate"></label>
+                        <input asp-for="EndDate" type="date" class="form-control" />
+                    </div>
+
+                    <div>
+                        <label asp-for="Price"></label>
+                        <input asp-for="Price" type="number" step="0.01" min="0" lang="en" class="form-control" />
+                    </div>
+
+                    <div>
+                        <label asp-for="Rating" class="form-label fw-semibold"></label>
+                        <input asp-for="Rating" id="ratingInput"
+                               type="number" step="0.1" min="0" max="10"
+                               class="form-control" placeholder="Movie Rating" />
+
+                        <!-- النجوم -->
+                        <div id="starRating" class="star-rating mt-2">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <i class="bi bi-star" data-value="@i"></i>
+                            }
+                            <span id="ratingValue">(0)</span>
                         </div>
                     </div>
 
+                    <div id="starsPreview" class="text-warning fs-4 mt-2"></div>
 
-                    <div class="col-md-4 offset-4 text-center">
-                        <img width="100%" id="ImageUrlPreview" />
+                    <div>
+                        <label asp-for="ImageURL"></label>
+
+                        <div class="d-flex align-items-center justify-content-between">
+
+                            <!-- LEFT: INPUT -->
+                            <div class="drop-zone flex-grow-1 me-4" style="max-width: 400px; width: 100%;">
+                                
+                                <input asp-for="ImageURL" id="imageInput" class="form-control" placeholder="Movie Url" />
+                            </div>
+
+                            
+                            
+
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <input type="submit" value="Create" class="btn btn-outline-success float-end" />
-                        <a class="btn btn-outline-secondary" asp-action="Index">Show All Movies</a>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="col-md-6">
+                   
+                    <div>
+                        <label asp-for="CinemaId"></label>
+                        <select asp-for="CinemaId" class="form-select" asp-items="ViewBag.Cinemas"></select>
                     </div>
-                </form>
+
+                    <div>
+                        <label asp-for="MovieCategory"></label>
+                        <select asp-for="MovieCategory" class="form-select"
+                                asp-items="Html.GetEnumSelectList<MovieCategory>()"></select>
+                    </div>
+
+                    <div>
+                        <label asp-for="ProducerId"></label>
+                        <select asp-for="ProducerId" class="form-select" asp-items="ViewBag.Producers"></select>
+                    </div>
+
+                    <div>
+                        <label asp-for="ActorIds"></label>
+                        <select asp-for="ActorIds" class="form-select" asp-items="ViewBag.Actors" multiple></select>
+                    </div>
+
+                    <div class="text-center mb-3">
+                        <img id="ImageUrlPreview" class="img-preview" />
+                    </div>
+
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="col-12">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" id="descriptionInput" class="form-control" rows="4" placeholder="Enter movie description..."></textarea>
+                    <div class="text-end mt-1">
+                        <small id="descCounter">0 / 500</small>
+                    </div>
+                </div>
+
+                
+
             </div>
-        </div>
+
+            <!-- BUTTONS -->
+            <div class="d-flex justify-content-between mt-4">
+
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    ← Back
+                </a>
+
+                <button type="submit" class="btn btn-success create-btn" id="submitBtn">
+                    <i class="bi bi-plus-circle"></i> Create Movie
+                </button>
+
+            </div>
+
+        </form>
+
     </div>
 </div>
-
 @section Scripts {
-    <script>
-        $("#ImageURL").on("change", function () {
-            var output = document.getElementById("ImageUrlPreview");
-            output.src = $(this).val();
+<script>
+
+    const input = document.getElementById("ratingInput");
+    const ratingText = document.getElementById("ratingValue");
+    const stars = document.querySelectorAll("#starRating i");
+
+    function updateStars(value) {
+
+        let full = Math.floor(value / 2);
+        let half = value % 2 >= 1;
+
+        stars.forEach((star, i) => {
+
+
+            star.className = "bi";
+
+            if (i < full) {
+                star.classList.add("bi-star-fill", "active");
+            } else if (i === full && half) {
+                star.classList.add("bi-star-half", "active");
+            } else {
+                star.classList.add("bi-star");
+            }
         });
-        $("#ratingInput").on("input", function () {
-            var rating = $(this).val();
-            var stars = Math.round(rating / 2);
 
-            var starHtml = "";
+        ratingText.innerText = `(${value})`;
+    }
 
-            for (var i = 0; i < 5; i++) {
-                if (i < stars)
-                    starHtml += "★";
-                else
-                    starHtml += "☆";
+    updateStars(parseFloat(input.value) || 0); // 👈 هنا
+
+    // لما تكتب في input
+    input.addEventListener("input", () => {
+        let value = parseFloat(input.value) || 0;
+        updateStars(value);
+    });
+
+        // لما تضغط نجوم
+    stars.forEach((star, index) => {
+
+        star.addEventListener("click", () => {
+            let value = (index + 1) * 2; // من 10
+            input.value = value;
+            updateStars(value);
+        });
+
+    });
+
+    
+
+   const dropZone = document.querySelector(".drop-zone");
+   const inputImg = document.getElementById("imageInput");
+
+   function showImage() {
+
+       const img = document.getElementById("ImageUrlPreview");
+
+       if (inputImg.value.trim() !== "") {
+           img.src = inputImg.value;
+           img.style.display = "block";
+           img.classList.add("show");
+       } else {
+           img.style.display = "none";
+           img.classList.remove("show");
+       }
+   }
+   // 👇 أهم سطرين
+   inputImg.addEventListener("keyup", showImage);
+   inputImg.addEventListener("change", showImage);
+   // 👇 عشان تظهر لو فيه value جاهزة
+   showImage();
+
+   dropZone.addEventListener("click", () => inputImg.click());
+
+   dropZone.addEventListener("dragover", e => {
+       e.preventDefault();
+       dropZone.classList.add("dragover");
+   });
+
+   dropZone.addEventListener("dragleave", () => {
+       dropZone.classList.remove("dragover");
+   });
+
+   dropZone.addEventListener("drop", e => {
+
+       e.preventDefault();
+       dropZone.classList.remove("dragover");
+
+       const file = e.dataTransfer.files[0];
+       const reader = new FileReader();
+
+       reader.onload = function (event) {
+           const img = document.getElementById("ImageUrlPreview");
+           img.src = event.target.result;
+           img.style.display = "block";
+           img.classList.add("show");
+       };
+            reader.readAsDataURL(file);
+   });
+
+    document.querySelector("form").addEventListener("submit", function () {
+
+        const btn = document.getElementById("submitBtn");
+
+        btn.innerHTML = "Creating...";
+        btn.disabled = true;
+
+        btn.style.transform = "scale(0.95)";
+    });
+
+    const descInput = document.getElementById("descriptionInput");
+    const counter = document.getElementById("descCounter");
+
+    const maxLength = 500;
+
+       
+    function updateCounter() {
+
+         const length = descInput.value.length;
+         counter.innerText = `${length} / ${maxLength}`;
+
+           
+         if (length > maxLength - 50) {
+
+             counter.style.color = "red";
+         } else {
+
+             counter.style.color = "#6c757d";
+         }
+    }
+
+      
+    updateCounter();
+
+      
+    descInput.addEventListener("input", updateCounter);
+
+    const movieNameInput = document.getElementById("movieNameInput");
+
+            movieNameInput.addEventListener("input", () => {
+
+            const movieName = movieNameInput.value.trim();
+
+            if (movieName !== "") {
+                descInput.placeholder = `Enter movie description for ${movieName}`;
+            } else {
+                descInput.placeholder = "Enter movie description...";
             }
 
-            $("#starsPreview").html(starHtml + " (" + rating + ")");
         });
-    </script>
+</script>
+    
 }

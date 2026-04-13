@@ -2,6 +2,7 @@
 using IMDB.Core.Static;
 using IMDB.Data;
 using IMDB.Data.Models;
+using IMDB.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +13,11 @@ namespace IMDB.Controllers
     public class CinemasController : Controller
     {
         private readonly ICinemasService _service;
-        public CinemasController(ICinemasService service)
+        private readonly IWebHostEnvironment _environment;
+        public CinemasController(ICinemasService service, IWebHostEnvironment environment)
         {
             _service = service;
+            _environment = environment;
         }
         [AllowAnonymous]
         public async Task<IActionResult> Index()
@@ -37,8 +40,14 @@ namespace IMDB.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Logo,Name,Description")] Cinema cinema)
+        public async Task<IActionResult> Create([Bind("Logo,Name,Description")] Cinema cinema, IFormFile? imageFile)
         {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                ModelState.Remove(nameof(Cinema.Logo));
+                cinema.Logo = await ImageHelper.ProcessImageAsync(imageFile, _environment.WebRootPath, "Cinemas");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(cinema);
@@ -55,8 +64,14 @@ namespace IMDB.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Logo,Name,Description")] Cinema cinema)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Logo,Name,Description")] Cinema cinema, IFormFile? imageFile)
         {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                ModelState.Remove(nameof(Cinema.Logo));
+                cinema.Logo = await ImageHelper.ProcessImageAsync(imageFile, _environment.WebRootPath, "Cinemas");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(cinema);

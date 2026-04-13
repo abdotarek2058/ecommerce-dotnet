@@ -2,6 +2,7 @@
 using IMDB.Core.Static;
 using IMDB.Data;
 using IMDB.Data.Models;
+using IMDB.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +13,11 @@ namespace IMDB.Controllers
     public class ActorsController : Controller
     {
         private readonly IActorsService _service;
-        public ActorsController(IActorsService service)
+        private readonly IWebHostEnvironment _environment;
+        public ActorsController(IActorsService service, IWebHostEnvironment environment)
         {
             _service = service;
+            _environment = environment;
         }
         [AllowAnonymous]
         public async Task<IActionResult> Index()
@@ -29,8 +32,14 @@ namespace IMDB.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProfilePictureURL,FullName,Bio")] Actor actor)
+        public async Task<IActionResult> Create([Bind("ProfilePictureURL,FullName,Bio")] Actor actor, IFormFile? imageFile)
         {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                ModelState.Remove(nameof(Actor.ProfilePictureURL));
+                actor.ProfilePictureURL = await ImageHelper.ProcessImageAsync(imageFile, _environment.WebRootPath, "Actors");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(actor);
@@ -56,8 +65,14 @@ namespace IMDB.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProfilePictureURL,FullName,Bio")] Actor actor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProfilePictureURL,FullName,Bio")] Actor actor, IFormFile? imageFile)
         {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                ModelState.Remove(nameof(Actor.ProfilePictureURL));
+                actor.ProfilePictureURL = await ImageHelper.ProcessImageAsync(imageFile, _environment.WebRootPath, "Actors");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(actor);

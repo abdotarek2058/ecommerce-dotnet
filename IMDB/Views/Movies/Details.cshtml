@@ -1,6 +1,7 @@
 ﻿@model Movie
 @{
     ViewData["Title"] = "Movie Details";
+    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
 }
 <link rel="stylesheet" href="~/css/actor-img.css" />
 <link rel="stylesheet" href="~/css/movie-img.css">
@@ -45,21 +46,21 @@
                         </p>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <img src="@Model.ImageURL" class="movie-img h-100" width="100%" alt="@Model.Name">
+                <div class="col-md-4 movie-details-poster">
+                    <img src="@Model.ImageURL" class="movie-img movie-details-img" width="100%" alt="@Model.Name">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
                         <p class="card-text">@Model.Description</p>
                         <p class="card-text">
                             <b>Cinema: </b>
-                            <a asp-controller="Cinemas" asp-action="Details" asp-route-id="@Model.CinemaId">
+                            <a asp-controller="Cinemas" asp-action="Details" asp-route-id="@Model.CinemaId" asp-route-returnUrl="@returnUrl">
                                 @Model.Cinema.Name
                             </a>
                         </p>
                         <p class="card-text">
                             <b>Producer: </b>
-                            <a asp-controller="Producers" asp-action="Details" asp-route-id="@Model.ProducerId">
+                            <a asp-controller="Producers" asp-action="Details" asp-route-id="@Model.ProducerId" asp-route-returnUrl="@returnUrl">
                                 @Model.Producer.FullName
                             </a>
                         </p>
@@ -90,7 +91,7 @@
                                     <div class="col-md-4 mb-3">
                                         <img class="actor-img" src="@actor.Actor.ProfilePictureURL"  />
                                         <br />
-                                        <a asp-controller="Actors" asp-action="Details" asp-route-id="@actor.ActorId">@actor.Actor.FullName</a>
+                                        <a asp-controller="Actors" asp-action="Details" asp-route-id="@actor.ActorId" asp-route-returnUrl="@returnUrl">@actor.Actor.FullName</a>
                                     </div>
                                 }
                             </div>
