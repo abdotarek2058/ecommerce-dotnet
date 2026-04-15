@@ -31,9 +31,8 @@ The system supports product management, authentication, shopping cart, and admin
 
 ### 🔐 Authentication
 
-#### Login
-![Login](screenshots/Login.png)
-
+### 🔐 Login Page
+<img src="screenshots/Login.png" width="700"/>
 #### Register
 ![Register](screenshots/Register.png)
 
