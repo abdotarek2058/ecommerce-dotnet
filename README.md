@@ -27,14 +27,23 @@ The system supports product management, authentication, shopping cart, and admin
 
 ## 📸 Screenshots
 
-### 🏠 Home Page
-![Home](your-image-link)
+### 🎬 Movies List
+![Movies](screenshots/movies-list.png)
 
-### 🛍️ Products Page
-![Products](your-image-link)
+### 🎥 Movie Details
+![Details](screenshots/movie-details.png)
+
+### 🔐 Login Page
+![Login](screenshots/login.png)
+
+### 📝 Register Page
+![Register](screenshots/register.png)
 
 ### ⚙️ Admin Dashboard
-![Dashboard](your-image-link)
+![Dashboard](screenshots/admin-dashboard.png)
+
+### 🛠️ Admin Management
+![Admin](screenshots/admin-management.png)
 
 ---
 
