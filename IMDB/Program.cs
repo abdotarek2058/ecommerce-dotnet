@@ -111,6 +111,12 @@ namespace IMDB
                 pattern: "{controller=Movies}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.Migrate();
+            }
             //seed database
             AppDbIntializer.Seed(app);
             AppDbIntializer.SeedUsersAndRolesAsync(app).Wait();
