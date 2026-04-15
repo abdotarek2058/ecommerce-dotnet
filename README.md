@@ -1,4 +1,4 @@
-# 🛒 Ecommerce .NET
+# 🛒 Ecommerce .NET Web Application
 
 A full-stack e-commerce web application built using ASP.NET Core MVC.  
 The system supports product management, authentication, shopping cart, and admin dashboard.
