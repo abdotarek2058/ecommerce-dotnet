@@ -27,23 +27,51 @@ The system supports product management, authentication, shopping cart, and admin
 
 ## 📸 Screenshots
 
-### 🎬 Movies List
-![Movies](screenshots/movies-list.png)
+---
+
+### 🔐 Authentication
+
+#### Login
+![Login](screenshots/Login.png)
+
+#### Register
+![Register](screenshots/Register.png)
+
+---
+
+### 🎬 Movies
+
+#### Movies List
+![Movies List](screenshots/movies-list.png)
+
+#### Movies List (More)
+![Movies List 2](screenshots/movies-list2.png)
+
+---
 
 ### 🎥 Movie Details
-![Details](screenshots/movie-details.png)
 
-### 🔐 Login Page
-![Login](screenshots/login.png)
+![Movie Details](screenshots/movie-details.png)
 
-### 📝 Register Page
-![Register](screenshots/register.png)
+![Movie Details 2](screenshots/movies-details2.png)
+
+---
 
 ### ⚙️ Admin Dashboard
-![Dashboard](screenshots/admin-dashboard.png)
+
+![Dashboard](screenshots/admin-Dashboard.png)
+
+![Dashboard 2](screenshots/admin-Dashboard2.png)
+
+![Dashboard 3](screenshots/admin-Dashboard3.png)
+
+![Dashboard 4](screenshots/admin-dashboard4.png)
+
+---
 
 ### 🛠️ Admin Management
-![Admin](screenshots/admin-management.png)
+
+![Management](screenshots/admin-management.png)
 
 ---
 
