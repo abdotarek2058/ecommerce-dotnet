@@ -6,7 +6,7 @@ namespace IMDB.Core.ViewModel
     {
         public string AdminName { get; set; } = string.Empty;
         public string? AdminPicture { get; set; }
-        public DashboardHeroMovieViewModel? HeroMovie { get; set; }
+        public List<DashboardHeroMovieViewModel> HeroMovies { get; set; } = new();
         public List<DashboardStatCardViewModel> Stats { get; set; } = new();
         public List<DashboardQuickLinkViewModel> QuickLinks { get; set; } = new();
         public List<DashboardMovieCardViewModel> TrendingMovies { get; set; } = new();

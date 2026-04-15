@@ -57,25 +57,27 @@ namespace IMDB.Controllers
                 .SelectMany(o => o.OrderItems)
                 .Sum(oi => oi.Price * oi.Amount);
 
-            var heroMovie = movies
+            var heroMovies = movies
                 .OrderByDescending(m => m.Rating)
                 .ThenByDescending(m => m.StartDate)
-                .FirstOrDefault();
+                .Take(8)
+                .Select(m => new DashboardHeroMovieViewModel
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    Description = m.Description.Length > 180 ? m.Description[..180] + "..." : m.Description,
+                    ImageUrl = m.ImageURL,
+                    Rating = m.Rating,
+                    Category = m.MovieCategory.ToString(),
+                    Cinema = m.Cinema?.Name ?? "Unknown cinema"
+                })
+                .ToList();
 
             var viewModel = new DashboardViewModel
             {
                 AdminName = admin?.FullName ?? "Admin",
                 AdminPicture = admin?.ProfilePicture ?? User.FindFirst("picture")?.Value,
-                HeroMovie = heroMovie == null ? null : new DashboardHeroMovieViewModel
-                {
-                    Id = heroMovie.Id,
-                    Name = heroMovie.Name,
-                    Description = heroMovie.Description.Length > 180 ? heroMovie.Description[..180] + "..." : heroMovie.Description,
-                    ImageUrl = heroMovie.ImageURL,
-                    Rating = heroMovie.Rating,
-                    Category = heroMovie.MovieCategory.ToString(),
-                    Cinema = heroMovie.Cinema?.Name ?? "Unknown cinema"
-                },
+                HeroMovies = heroMovies,
                 Stats = new List<DashboardStatCardViewModel>
                 {
                     new() { Title = "Movies", Value = totalMovies.ToString(), Subtitle = "Titles in catalog", Icon = "bi-film", ToneClass = "tone-gold" },

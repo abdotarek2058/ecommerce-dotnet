@@ -66,22 +66,42 @@
             </div>
         </div>
 
-        @if (Model.HeroMovie != null)
+        @if (Model.HeroMovies.Any())
         {
-            <section class="hero-panel" style="background-image: linear-gradient(90deg, rgba(11,14,28,.92) 0%, rgba(11,14,28,.55) 45%, rgba(11,14,28,.15) 100%), url('@Model.HeroMovie.ImageUrl')">
-                <div class="hero-copy">
-                    <p class="eyebrow">Top rated spotlight</p>
-                    <h2>@Model.HeroMovie.Name</h2>
-                    <div class="hero-meta">
-                        <span>@Model.HeroMovie.Category</span>
-                        <span>@Model.HeroMovie.Cinema</span>
-                        <span><i class="bi bi-star-fill"></i> @Model.HeroMovie.Rating.ToString("0.0")</span>
-                    </div>
-                    <p>@Model.HeroMovie.Description</p>
-                    <div class="hero-actions">
-                        <a class="topbar-button" asp-controller="Movies" asp-action="Details" asp-route-id="@Model.HeroMovie.Id">Details</a>
-                        <a class="topbar-button ghost" asp-controller="Movies" asp-action="Edit" asp-route-id="@Model.HeroMovie.Id">Edit movie</a>
-                    </div>
+            <section class="hero-carousel" id="heroCarousel">
+                @for (var i = 0; i < Model.HeroMovies.Count; i++)
+                {
+                    var movie = Model.HeroMovies[i];
+                    <article class="hero-panel hero-slide @(i == 0 ? "active" : string.Empty)" data-index="@i" style="background-image: linear-gradient(90deg, rgba(11,14,28,.92) 0%, rgba(11,14,28,.55) 45%, rgba(11,14,28,.15) 100%), url('@movie.ImageUrl')">
+                        <div class="hero-copy">
+                            <p class="eyebrow">Top rated spotlight</p>
+                            <h2>@movie.Name</h2>
+                            <div class="hero-meta">
+                                <span>@movie.Category</span>
+                                <span>@movie.Cinema</span>
+                                <span><i class="bi bi-star-fill"></i> @movie.Rating.ToString("0.0")</span>
+                            </div>
+                            <p>@movie.Description</p>
+                            <div class="hero-actions">
+                                <a class="topbar-button" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id">Details</a>
+                                <a class="topbar-button ghost" asp-controller="Movies" asp-action="Edit" asp-route-id="@movie.Id">Edit movie</a>
+                            </div>
+                        </div>
+                    </article>
+                }
+
+                <button type="button" class="hero-arrow hero-arrow-left" id="heroPrev" aria-label="Previous movie">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button type="button" class="hero-arrow hero-arrow-right" id="heroNext" aria-label="Next movie">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+
+                <div class="hero-dots" id="heroDots">
+                    @for (var i = 0; i < Model.HeroMovies.Count; i++)
+                    {
+                        <button type="button" class="hero-dot @(i == 0 ? "active" : string.Empty)" data-index="@i" aria-label="Go to slide @(i + 1)"></button>
+                    }
                 </div>
             </section>
         }
@@ -219,3 +239,95 @@
         </section>
     </section>
 </div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const slides = Array.from(document.querySelectorAll(".hero-slide"));
+            const dots = Array.from(document.querySelectorAll(".hero-dot"));
+            const prevBtn = document.getElementById("heroPrev");
+            const nextBtn = document.getElementById("heroNext");
+            const carousel = document.getElementById("heroCarousel");
+
+            if (!slides.length) return;
+
+            let currentIndex = 0;
+            let intervalId;
+            let startX = 0;
+            let endX = 0;
+
+            function renderSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle("active", i === index);
+                });
+
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle("active", i === index);
+                });
+
+                currentIndex = index;
+            }
+
+            function nextSlide() {
+                renderSlide((currentIndex + 1) % slides.length);
+            }
+
+            function prevSlide() {
+                renderSlide((currentIndex - 1 + slides.length) % slides.length);
+            }
+
+            function restartAutoPlay() {
+                clearInterval(intervalId);
+                intervalId = setInterval(nextSlide, 5000);
+            }
+
+            function stopAutoPlay() {
+                clearInterval(intervalId);
+            }
+
+            prevBtn?.addEventListener("click", () => {
+                prevSlide();
+                restartAutoPlay();
+            });
+
+            nextBtn?.addEventListener("click", () => {
+                nextSlide();
+                restartAutoPlay();
+            });
+
+            dots.forEach(dot => {
+                dot.addEventListener("click", () => {
+                    const index = Number(dot.dataset.index);
+                    renderSlide(index);
+                    restartAutoPlay();
+                });
+            });
+
+            carousel?.addEventListener("mouseenter", stopAutoPlay);
+            carousel?.addEventListener("mouseleave", restartAutoPlay);
+
+            carousel?.addEventListener("touchstart", (event) => {
+                stopAutoPlay();
+                startX = event.changedTouches[0].clientX;
+            }, { passive: true });
+
+            carousel?.addEventListener("touchend", (event) => {
+                endX = event.changedTouches[0].clientX;
+                const deltaX = endX - startX;
+
+                if (Math.abs(deltaX) > 50) {
+                    if (deltaX > 0) {
+                        prevSlide();
+                    } else {
+                        nextSlide();
+                    }
+                }
+
+                restartAutoPlay();
+            }, { passive: true });
+
+            renderSlide(0);
+            restartAutoPlay();
+        })();
+    </script>
+}

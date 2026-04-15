@@ -191,6 +191,73 @@
     overflow: hidden;
 }
 
+.hero-carousel {
+    position: relative;
+    min-height: 320px;
+    touch-action: pan-y;
+}
+
+.hero-slide {
+    display: none;
+}
+
+.hero-slide.active {
+    display: block;
+    animation: heroFade .45s ease;
+}
+
+.hero-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(8, 13, 28, 0.72);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    z-index: 3;
+    transition: .25s ease;
+}
+
+.hero-arrow:hover {
+    background: rgba(247, 201, 72, 0.9);
+    color: #111827;
+}
+
+.hero-arrow-left {
+    left: 18px;
+}
+
+.hero-arrow-right {
+    right: 18px;
+}
+
+.hero-dots {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 3;
+}
+
+.hero-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 0;
+    background: rgba(255,255,255,.35);
+}
+
+.hero-dot.active {
+    background: var(--dash-accent);
+    box-shadow: 0 0 0 3px rgba(247, 201, 72, 0.18);
+}
+
 .hero-copy {
     max-width: 540px;
 }
@@ -376,6 +443,17 @@
 
 .shortcut-icon {
     background: linear-gradient(135deg, rgba(247, 201, 72, 0.18), rgba(56, 189, 248, 0.18));
+}
+
+@keyframes heroFade {
+    from {
+        opacity: .45;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 1200px) {
