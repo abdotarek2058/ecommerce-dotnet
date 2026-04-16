@@ -115,11 +115,14 @@ namespace IMDB
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                db.Database.Migrate();
+                //db.Database.Migrate();
             }
             //seed database
-            AppDbIntializer.Seed(app);
-            AppDbIntializer.SeedUsersAndRolesAsync(app).Wait();
+            if (app.Environment.IsDevelopment())
+            {
+                AppDbIntializer.Seed(app);
+                AppDbIntializer.SeedUsersAndRolesAsync(app).Wait();
+            }
             app.Run();
         }
     }

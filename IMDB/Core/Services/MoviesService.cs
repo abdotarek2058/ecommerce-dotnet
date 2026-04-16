@@ -73,10 +73,16 @@ namespace IMDB.Core.Services
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                query = query.Where(n =>
-                    n.Name.Contains(searchString) ||
-                    n.Description.Contains(searchString) ||
-                    n.MovieCategory.ToString().Contains(searchString));
+                var normalizedSearch = searchString.Trim().ToLower();
+
+                var nameMatches = query.Where(n => n.Name.ToLower().Contains(normalizedSearch));
+                var hasNameMatches = await nameMatches.AnyAsync();
+
+                query = hasNameMatches
+                    ? nameMatches
+                    : query.Where(n =>
+                        n.Description.ToLower().Contains(normalizedSearch) ||
+                        n.MovieCategory.ToString().ToLower().Contains(normalizedSearch));
             }
 
             return await query.ToListAsync();
@@ -127,10 +133,27 @@ namespace IMDB.Core.Services
 
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(m =>
-                    m.Name.Contains(search) ||
-                    m.Description.Contains(search) ||
-                    m.MovieCategory.ToString().Contains(search));
+                var normalizedSearch = search.Trim().ToLower();
+
+                var nameMatches = query.Where(m => m.Name.ToLower().Contains(normalizedSearch));
+                var hasNameMatches = await nameMatches.AnyAsync();
+
+                query = hasNameMatches
+                    ? nameMatches
+                    : query.Where(m =>
+                        m.Description.ToLower().Contains(normalizedSearch) ||
+                        m.MovieCategory.ToString().ToLower().Contains(normalizedSearch));
+
+                query = query
+                    .OrderBy(m => m.Name.ToLower() == normalizedSearch ? 0 : 1)
+                    .ThenBy(m => m.Name.ToLower().StartsWith(normalizedSearch) ? 0 : 1)
+                    .ThenBy(m => m.Name);
+            }
+            else
+            {
+                query = query
+                    .OrderByDescending(m => m.Rating)
+                    .ThenBy(m => m.Name);
             }
 
             var totalCount = await query.CountAsync();

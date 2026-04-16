@@ -25,11 +25,16 @@ namespace IMDB.Controllers
             _service = service;
         }
         [AllowAnonymous]
-        public async Task<IActionResult> Index(int page = 1, string search = "")
+        public async Task<IActionResult> Index(int page = 1, string search = "", bool partial = false)
         {
             int pageSize = 6;
             var result = await _service.GetAllPagedAsync(page, pageSize, search);
             ViewBag.Search = search;
+
+            if (partial)
+            {
+                return PartialView("_MovieResults", result);
+            }
 
             return View(result);
         }
