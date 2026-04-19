@@ -8,14 +8,17 @@ namespace IMDB.Core.Services
 {
     public class OrdersService : IOrdersService
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<OrdersService> _logger;
         private readonly AppDbContext _context;
         private readonly IEmailService _emailService;
-        public OrdersService(AppDbContext context, ILogger<OrdersService> logger, IEmailService emailService)
+        public OrdersService(AppDbContext context, ILogger<OrdersService> logger, IEmailService emailService, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _logger = logger;
             _emailService = emailService;
+            _httpContextAccessor = httpContextAccessor;
+          
         }
         public async Task<List<Order>> GetOrderByUserIdAndRoleAsync(string userId, string userRole)
         {
@@ -76,9 +79,13 @@ namespace IMDB.Core.Services
                     var path = Path.Combine(Directory.GetCurrentDirectory(), "Data/EmailTemplates/OrderConfirmation.html");
                     var template = await File.ReadAllTextAsync(path);
 
+                    var baseUrl = _httpContextAccessor.HttpContext.Request.Scheme + "://" +
+                                  _httpContextAccessor.HttpContext.Request.Host;
+                    template = template.Replace("{{LINK}}", $"{baseUrl}/Orders");
                     template = template.Replace("{{NAME}}", userEmailAddress);
                     template = template.Replace("{{ORDERID}}", order.Id.ToString());
-                    template = template.Replace("{{LINK}}", "https://localhost:7273/Orders");
+                    
+
                     template = template.Replace("{{DATE}}", order.OrderDate.ToString("dd MMM yyyy - hh:mm tt"));
 
 

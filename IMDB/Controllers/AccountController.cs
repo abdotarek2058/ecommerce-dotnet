@@ -290,7 +290,7 @@ namespace IMDB.Controllers
                 "Account",
                 new { token, email = model.Email },
                 Request.Scheme
-            );
+             );
 
 
             var templatePath = Path.Combine(

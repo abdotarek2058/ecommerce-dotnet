@@ -15,10 +15,18 @@
 
   <ItemGroup>
     <None Remove="Data\EmailTemplates\ConfirmEmail.html" />
+    <None Remove="Data\EmailTemplates\OrderConfirmation.html" />
+    <None Remove="Data\EmailTemplates\ResetPassword.html" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Data\EmailTemplates\ConfirmEmail.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\EmailTemplates\OrderConfirmation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\EmailTemplates\ResetPassword.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
