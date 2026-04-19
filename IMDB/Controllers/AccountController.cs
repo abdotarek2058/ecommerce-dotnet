@@ -222,12 +222,14 @@ namespace IMDB.Controllers
 
                 var templatePath = Path.Combine(
                     Directory.GetCurrentDirectory(),
+                    "Data",
                     "EmailTemplates",
                     "ConfirmEmail.html"
                     );
                 var template = System.IO.File.ReadAllText(templatePath);
 
                 template = template.Replace("{{LINK}}", confirmationLink);
+                template = template.Replace("{{NAME}}", user.FullName);
 
                 await _emailService.SendEmailAsync(
                     user.Email,
@@ -287,15 +289,27 @@ namespace IMDB.Controllers
                 "ResetPassword",
                 "Account",
                 new { token, email = model.Email },
-                Request.Scheme);
+                Request.Scheme
+            );
 
+
+            var templatePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "Data",
+                "EmailTemplates",
+                "ResetPassword.html"
+            );
+
+            var template = System.IO.File.ReadAllText(templatePath);
+
+            template = template.Replace("{{LINK}}", resetLink);
+            template = template.Replace("{{NAME}}", user.FullName);
 
             await _emailService.SendEmailAsync(
                 model.Email,
-                "Password Reset",
-                $"You can reset your password by clicking this link: <a href='{resetLink}'>Reset Password</a>"
+                "🔐 Reset Your Password",
+                template
             );
-
             return View("ForgotPasswordConfirmation");
         }
 

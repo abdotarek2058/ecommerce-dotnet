@@ -45,6 +45,8 @@ namespace IMDB
                     options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
 
+                    options.CallbackPath = "/signin-google";
+
                     options.Scope.Add("profile");
                     options.Scope.Add("email");
                     options.ClaimActions.MapJsonKey("picture", "picture");
@@ -90,9 +92,9 @@ namespace IMDB
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
+                //app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             app.UseHttpsRedirection();
@@ -102,6 +104,10 @@ namespace IMDB
             app.UseAuthentication();
             app.UseAuthorization();
 
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
             app.UseHangfireDashboard("/hangfire");
 
 
@@ -115,14 +121,12 @@ namespace IMDB
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                //db.Database.Migrate();
+                db.Database.Migrate();
             }
             //seed database
-            if (app.Environment.IsDevelopment())
-            {
-                AppDbIntializer.Seed(app);
-                AppDbIntializer.SeedUsersAndRolesAsync(app).Wait();
-            }
+            AppDbIntializer.Seed(app);
+            AppDbIntializer.SeedUsersAndRolesAsync(app).Wait();
+            
             app.Run();
         }
     }

@@ -73,15 +73,40 @@ namespace IMDB.Core.Services
                 _logger.LogInformation("Order created successfully with ID {OrderId}", order.Id);
                 try
                 {
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "Data/EmailTemplates/ConfirmEmail.html");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "Data/EmailTemplates/OrderConfirmation.html");
                     var template = await File.ReadAllTextAsync(path);
 
+                    template = template.Replace("{{NAME}}", userEmailAddress);
+                    template = template.Replace("{{ORDERID}}", order.Id.ToString());
                     template = template.Replace("{{LINK}}", "https://localhost:7273/Orders");
+                    template = template.Replace("{{DATE}}", order.OrderDate.ToString("dd MMM yyyy - hh:mm tt"));
 
+
+                    string itemsHtml = "";
+                    decimal total = 0;
+
+                    foreach (var item in items)
+                    {
+                        var movie = item.Movie;
+
+                        var row = $@"
+                            <tr>
+                                <td style='padding:10px'>{movie.Name}</td>
+                                <td style='padding:10px; text-align:center'>{item.Amount}</td>
+                                <td style='padding:10px; text-align:right'>{movie.Price} EGP</td>
+                            </tr>";
+
+                        itemsHtml += row;
+
+                        total += (decimal)(movie.Price * item.Amount);
+                    }
+
+                    template = template.Replace("{{ITEMS}}", itemsHtml);
+                    template = template.Replace("{{TOTAL}}", total.ToString());
 
                     BackgroundJob.Enqueue<IEmailService> (x => x.SendEmailAsync(
                        userEmailAddress,
-                       "Order Confirmation",
+                       $"Order #{order.Id} Confirmation",
                        template
                     ));
                 }
