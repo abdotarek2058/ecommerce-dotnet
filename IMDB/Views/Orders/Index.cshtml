@@ -37,7 +37,13 @@
                                 {
                                     <li>
                                         <div class="alert-info" role="alert">
-                                            <span class="badge bg-success">@item.Amount</span> [@item.Price.ToString("c")] - @item.Movie.Name
+                                            <span class="badge bg-success">@item.Amount</span> [@item.Price.ToString("c")] -
+                                            <a asp-controller="Movies"
+                                               asp-action="Details"
+                                               asp-route-id="@item.MovieId"
+                                               class="text-decoration-none fw-semibold">
+                                                @item.Movie.Name
+                                            </a>
                                         </div>
                                     </li>
                                 }
